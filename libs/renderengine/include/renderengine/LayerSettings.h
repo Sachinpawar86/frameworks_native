@@ -23,6 +23,7 @@
 #include <gui/DisplayLuts.h>
 #include <math/mat4.h>
 #include <math/vec3.h>
+#include <renderengine/AxRenderEngineTypes.h>
 #include <renderengine/ExternalTexture.h>
 #include <renderengine/PrintMatrix.h>
 #include <ui/BlurRegion.h>
@@ -39,6 +40,7 @@
 #include "ui/EdgeExtensionEffect.h"
 
 #include <iosfwd>
+#include <memory>
 
 namespace android {
 namespace renderengine {
@@ -68,6 +70,8 @@ struct Buffer {
     bool isOpaque = false;
 
     float maxLuminanceNits = 0.0;
+
+    AxBufferContentHint axContentHint = AxBufferContentHint::Unknown;
 };
 
 // Metadata describing the layer geometry.
@@ -178,7 +182,8 @@ static inline bool operator==(const Buffer& lhs, const Buffer& rhs) {
             lhs.useTextureFiltering == rhs.useTextureFiltering &&
             lhs.textureTransform == rhs.textureTransform &&
             lhs.usePremultipliedAlpha == rhs.usePremultipliedAlpha &&
-            lhs.isOpaque == rhs.isOpaque && lhs.maxLuminanceNits == rhs.maxLuminanceNits;
+            lhs.isOpaque == rhs.isOpaque && lhs.maxLuminanceNits == rhs.maxLuminanceNits &&
+            lhs.axContentHint == rhs.axContentHint;
 }
 
 static inline bool operator==(const Geometry& lhs, const Geometry& rhs) {
@@ -227,6 +232,7 @@ static inline void PrintTo(const Buffer& settings, ::std::ostream* os) {
     *os << "\n    .usePremultipliedAlpha = " << settings.usePremultipliedAlpha;
     *os << "\n    .isOpaque = " << settings.isOpaque;
     *os << "\n    .maxLuminanceNits = " << settings.maxLuminanceNits;
+    *os << "\n    .axContentHint = " << toString(settings.axContentHint);
     *os << "\n}";
 }
 
